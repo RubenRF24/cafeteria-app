@@ -38,7 +38,8 @@ public class ClienteController {
 
         URI uri = uriComponentsBuilder.path("/api/clientes/{id}").buildAndExpand(cliente.getId()).toUri();
 
-        return ResponseEntity.created(uri).body("Cliente #" + cliente.getId() + " creado correctamente.");
+        return ResponseEntity.created(uri).body(new DatosListadoCliente(cliente.getId(), cliente.getNombre(),
+                cliente.getCorreo(), cliente.getTelefono()));
     }
 
     @GetMapping("/{id}")
@@ -57,14 +58,15 @@ public class ClienteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarCliente(@PathVariable Long id,
-            @RequestBody DatosActualizarCliente datosActualizarCliente) {
+            @RequestBody @Valid DatosActualizarCliente datosActualizarCliente) {
 
         Cliente cliente = clienteService.buscarClientePorId(id);
 
         cliente.actualizarCliente(datosActualizarCliente);
 
         Cliente clienteActualizado = clienteService.actualizarCliente(cliente);
-        return ResponseEntity.ok().body("Cliente #" + clienteActualizado.getId() + " actualizado correctamente.");
+        return ResponseEntity.ok().body(new DatosListadoCliente(clienteActualizado.getId(),
+                clienteActualizado.getNombre(), clienteActualizado.getCorreo(), clienteActualizado.getTelefono()));
     }
 
     @DeleteMapping("/{id}")
