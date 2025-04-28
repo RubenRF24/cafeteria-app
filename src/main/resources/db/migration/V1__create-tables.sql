@@ -3,7 +3,7 @@ create table tbl_cliente (
     id_cliente bigint not null auto_increment,
     nombre varchar(100) not null,
     correo varchar(100) not null,
-    telefono double null,
+    telefono varchar(20) null,
     primary key (id_cliente)
 );
 

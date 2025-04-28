@@ -33,7 +33,7 @@ public class Cliente {
     private String correo;
 
     @Column(name = "telefono")
-    private Double telefono;
+    private String telefono;
 
     public void actualizarCliente(DatosActualizarCliente datosActualizarCliente) {
         if (datosActualizarCliente.nombre() != null) {
