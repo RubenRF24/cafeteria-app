@@ -41,8 +41,7 @@ public class ProductoController {
         URI uri = uriComponentsBuilder.path("/api/productos/{id}").buildAndExpand(producto.getId())
                 .toUri();
 
-        return ResponseEntity.created(uri).body(new DatosRespuestaProducto(producto.getId(), producto.getNombre(),
-                producto.getPrecio(), Categoria.valueOf(producto.getCategoria()), producto.getStock()));
+        return ResponseEntity.created(uri).body("Producto #" + producto.getId() + " creado correctamente.");
     }
 
     @GetMapping("/{id}")
