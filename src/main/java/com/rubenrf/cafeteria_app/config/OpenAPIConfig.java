@@ -1,6 +1,5 @@
 package com.rubenrf.cafeteria_app.config;
 
-import io.swagger.v3.oas.models.ExternalDocumentation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
