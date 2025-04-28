@@ -35,7 +35,7 @@ public class Cliente {
     @Column(name = "telefono")
     private Double telefono;
 
-    void actualizarCliente(DatosActualizarCliente datosActualizarCliente) {
+    public void actualizarCliente(DatosActualizarCliente datosActualizarCliente) {
         if (datosActualizarCliente.nombre() != null) {
             this.nombre = datosActualizarCliente.nombre();
         }
