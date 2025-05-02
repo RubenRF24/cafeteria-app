@@ -35,9 +35,9 @@ public class Pedido {
     private Cliente cliente;
 
     @Column(name = "estado")
-    private Estado estado;
+    private String estado;
 
-    @OneToMany(mappedBy = "id_pedido", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<DetallesPedido> detallesPedidoList;
 
 }
