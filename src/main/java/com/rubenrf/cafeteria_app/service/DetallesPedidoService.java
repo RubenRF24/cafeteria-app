@@ -1,10 +1,11 @@
 package com.rubenrf.cafeteria_app.service;
 
-import com.rubenrf.cafeteria_app.dto.detallesPedido.DatosCrearDetallesPedido;
-import com.rubenrf.cafeteria_app.model.Pedido;
+import java.util.List;
+
+import com.rubenrf.cafeteria_app.model.DetallesPedido;
 
 public interface DetallesPedidoService {
 
-    void crearDetallesPedido(Pedido pedido, DatosCrearDetallesPedido datosCrearDetallesPedido);
+    void crearDetallesPedido(List<DetallesPedido> detallesPedidoList);
 
 }
