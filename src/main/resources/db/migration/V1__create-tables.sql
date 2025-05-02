@@ -19,7 +19,7 @@ create table tbl_producto (
 create table tbl_pedido (
     id_pedido bigint not null auto_increment,
     id_cliente bigint not null not null,
-    estado int(11) not null,
+    estado varchar(50) not null,
     primary key (id_pedido)
 );
 
