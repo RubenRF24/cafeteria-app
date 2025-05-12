@@ -1,12 +1,16 @@
 package com.rubenrf.cafeteria_app.model;
 
+import java.util.List;
+
 import com.rubenrf.cafeteria_app.dto.cliente.DatosActualizarCliente;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +38,11 @@ public class Cliente {
 
     @Column(name = "telefono")
     private String telefono;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<Pedido> pedidosList;
+
+
 
     public void actualizarCliente(DatosActualizarCliente datosActualizarCliente) {
         if (datosActualizarCliente.nombre() != null) {

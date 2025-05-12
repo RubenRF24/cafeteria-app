@@ -19,7 +19,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.rubenrf.cafeteria_app.dto.cliente.DatosActualizarCliente;
 import com.rubenrf.cafeteria_app.dto.cliente.DatosCrearCliente;
 import com.rubenrf.cafeteria_app.dto.cliente.DatosListadoCliente;
+import com.rubenrf.cafeteria_app.dto.cliente.DatosListadoTotalCliente;
 import com.rubenrf.cafeteria_app.model.Cliente;
+import com.rubenrf.cafeteria_app.model.Estado;
 import com.rubenrf.cafeteria_app.service.ClienteService;
 
 import jakarta.validation.Valid;
@@ -73,6 +75,23 @@ public class ClienteController {
     public ResponseEntity<?> eliminarCliente(@PathVariable Long id) {
         clienteService.eliminarCliente(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/total-pedidos")
+    public ResponseEntity<?> obtenerTotalPedidos(@PathVariable Long id){
+
+        Cliente cliente = clienteService.buscarClientePorId(id);
+
+        Double totalPedidos = cliente.getPedidosList().stream().map(pedido -> {
+            if(pedido.getEstado().equals(Estado.CANCELADO.toString())){
+                return 0.0;
+            }
+            return pedido.getDetallesPedidoList().stream().map(detalle -> {
+                return detalle.getProducto().getPrecio() * detalle.getCantidad();
+            }).reduce(0.0, Double::sum);
+        }).reduce(0.0, Double::sum);
+
+        return ResponseEntity.ok(new DatosListadoTotalCliente(cliente.getId(), cliente.getNombre(), cliente.getCorreo(), cliente.getTelefono(), totalPedidos));
     }
 
 }
