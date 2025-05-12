@@ -1070,4 +1070,196 @@ class CafeteriaAppApplicationTests {
 				.statusCode(200)
 				.body("totalPedidos", equalTo(0.0F));
 	}
+
+	@Test
+	void obtenerProductosMasVendidos() {
+		// Primero creamos un cliente
+		String crearClienteJson = """
+				{
+					"nombre": "Ruben Robles",
+					"correo": "ruben@mail.com",
+					"telefono": "+573020202022"
+				}
+				""";
+		DatosListadoCliente cliente = RestAssured.given()
+				.contentType("application/json")
+				.body(crearClienteJson)
+				.when()
+				.post("/api/clientes")
+				.then()
+				.log().all()
+				.statusCode(201)
+				.extract()
+				.body().as(DatosListadoCliente.class);
+
+		// Creamos tres productos diferentes
+		String crearProducto1Json = """
+				{
+					"nombre": "Café",
+					"precio": 500,
+					"categoria": "BEBIDA",
+					"stock": 100
+				}
+				""";
+		DatosListadoProducto producto1 = RestAssured.given()
+				.contentType("application/json")
+				.body(crearProducto1Json)
+				.when()
+				.post("/api/productos")
+				.then()
+				.log().all()
+				.statusCode(201)
+				.extract()
+				.body().as(DatosListadoProducto.class);
+
+		String crearProducto2Json = """
+				{
+					"nombre": "Coca Cola",
+					"precio": 2500,
+					"categoria": "BEBIDA",
+					"stock": 100
+				}
+				""";
+		DatosListadoProducto producto2 = RestAssured.given()
+				.contentType("application/json")
+				.body(crearProducto2Json)
+				.when()
+				.post("/api/productos")
+				.then()
+				.log().all()
+				.statusCode(201)
+				.extract()
+				.body().as(DatosListadoProducto.class);
+
+		String crearProducto3Json = """
+				{
+					"nombre": "Hamburguesa",
+					"precio": 15000,
+					"categoria": "COMIDA",
+					"stock": 100
+				}
+				""";
+		DatosListadoProducto producto3 = RestAssured.given()
+				.contentType("application/json")
+				.body(crearProducto3Json)
+				.when()
+				.post("/api/productos")
+				.then()
+				.log().all()
+				.statusCode(201)
+				.extract()
+				.body().as(DatosListadoProducto.class);
+
+		// Creamos pedidos con diferentes cantidades para cada producto
+		// Producto 1: 5 unidades
+		String crearPedido1Json = """
+				{
+					"idCliente": %d,
+					"datosCrearDetallesPedido": [
+						{
+							"idProducto": %d,
+							"cantidad": 5
+						}
+					]
+				}
+				""".formatted(cliente.id(), producto1.id());
+
+		RestAssured.given()
+				.contentType("application/json")
+				.body(crearPedido1Json)
+				.when()
+				.post("/api/pedidos")
+				.then()
+				.log().all()
+				.statusCode(201);
+
+		// Producto 2: 3 unidades
+		String crearPedido2Json = """
+				{
+					"idCliente": %d,
+					"datosCrearDetallesPedido": [
+						{
+							"idProducto": %d,
+							"cantidad": 3
+						}
+					]
+				}
+				""".formatted(cliente.id(), producto2.id());
+
+		RestAssured.given()
+				.contentType("application/json")
+				.body(crearPedido2Json)
+				.when()
+				.post("/api/pedidos")
+				.then()
+				.log().all()
+				.statusCode(201);
+
+		// Producto 3: 1 unidad
+		String crearPedido3Json = """
+				{
+					"idCliente": %d,
+					"datosCrearDetallesPedido": [
+						{
+							"idProducto": %d,
+							"cantidad": 1
+						}
+					]
+				}
+				""".formatted(cliente.id(), producto3.id());
+
+		RestAssured.given()
+				.contentType("application/json")
+				.body(crearPedido3Json)
+				.when()
+				.post("/api/pedidos")
+				.then()
+				.log().all()
+				.statusCode(201);
+
+		// Obtenemos los productos más vendidos
+		RestAssured.given()
+				.contentType("application/json")
+				.when()
+				.get("/api/productos/mas-vendidos")
+				.then()
+				.log().all()
+				.statusCode(200)
+				.body("[0].id", equalTo(producto1.id().intValue()))
+				.body("[0].unidadesVendidas", equalTo(5))
+				.body("[1].id", equalTo(producto2.id().intValue()))
+				.body("[1].unidadesVendidas", equalTo(3))
+				.body("[2].id", equalTo(producto3.id().intValue()))
+				.body("[2].unidadesVendidas", equalTo(1));
+	}
+
+	@Test
+	void obtenerProductosMasVendidosSinVentas() {
+		// Creamos un producto sin ventas
+		String crearProductoJson = """
+				{
+					"nombre": "Café",
+					"precio": 500,
+					"categoria": "BEBIDA",
+					"stock": 100
+				}
+				""";
+		RestAssured.given()
+				.contentType("application/json")
+				.body(crearProductoJson)
+				.when()
+				.post("/api/productos")
+				.then()
+				.log().all()
+				.statusCode(201);
+
+		// Obtenemos los productos más vendidos
+		RestAssured.given()
+				.contentType("application/json")
+				.when()
+				.get("/api/productos/mas-vendidos")
+				.then()
+				.log().all()
+				.statusCode(200);
+	}
 }
