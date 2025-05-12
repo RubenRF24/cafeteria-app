@@ -2,6 +2,7 @@ package com.rubenrf.cafeteria_app.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rubenrf.cafeteria_app.model.Cliente;
 import com.rubenrf.cafeteria_app.model.Estado;
@@ -18,6 +19,7 @@ public class PedidoServiceImpl implements PedidoService {
     private PedidoRepository pedidoRepository;
 
     @Override
+    @Transactional
     public Pedido crearPedido(Cliente cliente) {
 
         Pedido pedido = Pedido.builder()
@@ -30,6 +32,7 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
+    @Transactional
     public Pedido cancelarPedido(Long idPedido) {
         Pedido pedido = buscarPedidoPorId(idPedido);
         pedido.setEstado(Estado.CANCELADO.toString());
@@ -37,6 +40,7 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
+    @Transactional
     public void entregarPedido(Long idPedido) {
         Pedido pedido = buscarPedidoPorId(idPedido);
         pedido.setEstado(Estado.ENTREGADO.toString());
@@ -45,10 +49,12 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void listarPedidosPorCliente(Long idCliente) {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Pedido buscarPedidoPorId(Long id) {
         return pedidoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido #" + id + " no encontrado."));

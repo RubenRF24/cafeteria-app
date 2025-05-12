@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rubenrf.cafeteria_app.dto.cliente.DatosCrearCliente;
 import com.rubenrf.cafeteria_app.dto.cliente.DatosListadoCliente;
@@ -20,6 +21,7 @@ public class ClienteServiceImpl implements ClienteService {
     private ClienteRepository clienteRepository;
 
     @Override
+    @Transactional
     public Cliente crearCliente(DatosCrearCliente datosCrearCliente) {
         Cliente cliente = Cliente.builder()
                 .nombre(datosCrearCliente.nombre())
@@ -31,22 +33,26 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<DatosListadoCliente> listarClientes(Pageable pageable) {
         return clienteRepository.findAll(pageable).map(DatosListadoCliente::new);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Cliente buscarClientePorId(Long idCliente) {
         return clienteRepository.findById(idCliente)
                 .orElseThrow(() -> new EntityNotFoundException("Cliente #" + idCliente + " no encontrado."));
     }
 
     @Override
+    @Transactional
     public Cliente actualizarCliente(Cliente cliente) {
         return clienteRepository.save(cliente);
     }
 
     @Override
+    @Transactional
     public void eliminarCliente(Long idCliente) {
         if (!clienteRepository.existsById(idCliente)) {
             throw new EntityNotFoundException("Cliente #" + idCliente + " no encontrado.");
