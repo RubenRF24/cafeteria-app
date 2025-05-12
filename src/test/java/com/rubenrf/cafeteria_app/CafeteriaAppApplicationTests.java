@@ -392,4 +392,218 @@ class CafeteriaAppApplicationTests {
 
 	}
 
+	@Test
+	void crearPedido() {
+		// Primero creamos un cliente
+		String crearClienteJson = """
+				{
+					"nombre": "Ruben Robles",
+					"correo": "ruben@mail.com",
+					"telefono": "+573020202022"
+				}
+				""";
+		DatosListadoCliente cliente = RestAssured.given()
+				.contentType("application/json")
+				.body(crearClienteJson)
+				.when()
+				.post("/api/clientes")
+				.then()
+				.log().all()
+				.statusCode(201)
+				.extract()
+				.body().as(DatosListadoCliente.class);
+
+		// Luego creamos un producto
+		String crearProductoJson = """
+				{
+					"nombre": "Café",
+					"precio": 500,
+					"categoria": "BEBIDA",
+					"stock": 100
+				}
+				""";
+		DatosListadoProducto producto = RestAssured.given()
+				.contentType("application/json")
+				.body(crearProductoJson)
+				.when()
+				.post("/api/productos")
+				.then()
+				.log().all()
+				.statusCode(201)
+				.extract()
+				.body().as(DatosListadoProducto.class);
+
+		// Finalmente creamos el pedido
+		String crearPedidoJson = """
+				{
+					"idCliente": %d,
+					"datosCrearDetallesPedido": [
+						{
+							"idProducto": %d,
+							"cantidad": 2
+						}
+					]
+				}
+				""".formatted(cliente.id(), producto.id());
+
+		RestAssured.given()
+				.contentType("application/json")
+				.body(crearPedidoJson)
+				.when()
+				.post("/api/pedidos")
+				.then()
+				.log().all()
+				.statusCode(201);
+	}
+
+	@Test
+	void entregarPedido() {
+		// Primero creamos un cliente
+		String crearClienteJson = """
+				{
+					"nombre": "Ruben Robles",
+					"correo": "ruben@mail.com",
+					"telefono": "+573020202022"
+				}
+				""";
+		DatosListadoCliente cliente = RestAssured.given()
+				.contentType("application/json")
+				.body(crearClienteJson)
+				.when()
+				.post("/api/clientes")
+				.then()
+				.log().all()
+				.statusCode(201)
+				.extract()
+				.body().as(DatosListadoCliente.class);
+
+		// Luego creamos un producto
+		String crearProductoJson = """
+				{
+					"nombre": "Café",
+					"precio": 500,
+					"categoria": "BEBIDA",
+					"stock": 100
+				}
+				""";
+		DatosListadoProducto producto = RestAssured.given()
+				.contentType("application/json")
+				.body(crearProductoJson)
+				.when()
+				.post("/api/productos")
+				.then()
+				.log().all()
+				.statusCode(201)
+				.extract()
+				.body().as(DatosListadoProducto.class);
+
+		// Creamos el pedido
+		String crearPedidoJson = """
+				{
+					"idCliente": %d,
+					"datosCrearDetallesPedido": [
+						{
+							"idProducto": %d,
+							"cantidad": 2
+						}
+					]
+				}
+				""".formatted(cliente.id(), producto.id());
+
+		Integer pedidoId = RestAssured.given()
+				.contentType("application/json")
+				.body(crearPedidoJson)
+				.when()
+				.post("/api/pedidos")
+				.then()
+				.log().all()
+				.statusCode(201)
+				.extract()
+				.path("id");
+
+		// Entregamos el pedido
+		RestAssured.given()
+				.contentType("application/json")
+				.when()
+				.put("/api/pedidos/" + pedidoId + "/entregar-pedido")
+				.then()
+				.log().all()
+				.statusCode(200);
+	}
+
+	@Test
+	void cancelarPedido() {
+		// Primero creamos un cliente
+		String crearClienteJson = """
+				{
+					"nombre": "Ruben Robles",
+					"correo": "ruben@mail.com",
+					"telefono": "+573020202022"
+				}
+				""";
+		DatosListadoCliente cliente = RestAssured.given()
+				.contentType("application/json")
+				.body(crearClienteJson)
+				.when()
+				.post("/api/clientes")
+				.then()
+				.log().all()
+				.statusCode(201)
+				.extract()
+				.body().as(DatosListadoCliente.class);
+
+		// Luego creamos un producto
+		String crearProductoJson = """
+				{
+					"nombre": "Café",
+					"precio": 500,
+					"categoria": "BEBIDA",
+					"stock": 100
+				}
+				""";
+		DatosListadoProducto producto = RestAssured.given()
+				.contentType("application/json")
+				.body(crearProductoJson)
+				.when()
+				.post("/api/productos")
+				.then()
+				.log().all()
+				.statusCode(201)
+				.extract()
+				.body().as(DatosListadoProducto.class);
+
+		// Creamos el pedido
+		String crearPedidoJson = """
+				{
+					"idCliente": %d,
+					"datosCrearDetallesPedido": [
+						{
+							"idProducto": %d,
+							"cantidad": 2
+						}
+					]
+				}
+				""".formatted(cliente.id(), producto.id());
+
+		Integer pedidoId = RestAssured.given()
+				.contentType("application/json")
+				.body(crearPedidoJson)
+				.when()
+				.post("/api/pedidos")
+				.then()
+				.log().all()
+				.statusCode(201)
+				.extract()
+				.path("id");
+
+		// Cancelamos el pedido
+		RestAssured.given()
+				.contentType("application/json")
+				.when()
+				.put("/api/pedidos/" + pedidoId + "/cancelar-pedido")
+				.then()
+				.log().all()
+				.statusCode(200);
+	}
+
 }
