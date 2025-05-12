@@ -25,4 +25,6 @@ public interface ProductoService {
 
     void actualizarStock(Producto producto, int cantidad);
 
+    void eliminarTodosLosProductos();
+
 }

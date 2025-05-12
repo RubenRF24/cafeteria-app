@@ -80,6 +80,13 @@ public class ProductoServiceImpl implements ProductoService {
         return productoRepository.findAll().stream().map(DatosListadoProducto::new).toList();
     }
 
+    @Override
+    public void eliminarTodosLosProductos() {
+        productoRepository.deleteAll();
+    }
+
+    
+
     
 
 }

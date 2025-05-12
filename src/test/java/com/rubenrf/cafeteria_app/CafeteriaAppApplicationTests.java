@@ -2,6 +2,7 @@ package com.rubenrf.cafeteria_app;
 import static org.hamcrest.Matchers.equalTo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Import;
 
 import com.rubenrf.cafeteria_app.dto.cliente.DatosListadoCliente;
 import com.rubenrf.cafeteria_app.dto.producto.DatosListadoProducto;
+import com.rubenrf.cafeteria_app.service.ProductoService;
 
 import io.restassured.RestAssured;
 
@@ -20,10 +22,28 @@ class CafeteriaAppApplicationTests {
 	@LocalServerPort
 	private Integer port;
 
+	@Autowired
+	private ProductoService productoService;
+
 	@BeforeEach
 	void setup() {
 		RestAssured.baseURI = "http://localhost";
 		RestAssured.port = port;
+
+		productoService.eliminarTodosLosProductos();
+	}
+
+	@Test
+	void obtenerProductosVacio() {
+				
+		RestAssured.given()
+				.contentType("application/json")
+				.when()
+				.get("/api/productos")
+				.then()
+				.log().all()
+				.statusCode(204);
+
 	}
 
 	@Test
@@ -45,6 +65,19 @@ class CafeteriaAppApplicationTests {
 				.then()
 				.log().all()
 				.statusCode(201);
+
+	}
+
+	@Test
+	void obtenerClientesVacio() {
+
+		RestAssured.given()
+				.contentType("application/json")
+				.when()
+				.get("/api/clientes")
+				.then()
+				.log().all()
+				.statusCode(204);
 
 	}
 
@@ -129,6 +162,8 @@ class CafeteriaAppApplicationTests {
 				.statusCode(200);
 	}
 
+	
+
 	@Test
 	void obtenerClientes() {
 		String crearClienteJson = """
@@ -175,18 +210,9 @@ class CafeteriaAppApplicationTests {
 
 	}
 
-	@Test
-	void obtenerClientesVacio() {
+	
 
-		RestAssured.given()
-				.contentType("application/json")
-				.when()
-				.get("/api/clientes")
-				.then()
-				.log().all()
-				.statusCode(204);
-
-	}
+	
 
 	@Test
 	void obtenerProductos() {
@@ -234,18 +260,7 @@ class CafeteriaAppApplicationTests {
 				.statusCode(200);
 	}
 
-	@Test
-	void obtenerProductosVacio() {
-
-		RestAssured.given()
-				.contentType("application/json")
-				.when()
-				.get("/api/productos")
-				.then()
-				.log().all()
-				.statusCode(204);
-
-	}
+	
 
 	@Test
 	void actualizarCliente() {
