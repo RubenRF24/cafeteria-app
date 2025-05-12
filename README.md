@@ -17,7 +17,7 @@ Esta API permite gestionar productos, clientes y pedidos de una cafetería. Incl
 - Java 17
 - Spring Boot 3.x
 - Spring Data JPA
-- PostgreSQL
+- MySQL
 - Maven
 - Swagger/OpenAPI
 - JUnit 5
