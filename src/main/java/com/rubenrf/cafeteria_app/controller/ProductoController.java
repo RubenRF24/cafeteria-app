@@ -91,7 +91,7 @@ public class ProductoController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/unidades-vendidas")
+    @GetMapping("/mas-vendidos")
     public ResponseEntity<?> obtenerProductosMasVendidos() {
 
         List<DatosListadoProducto> productos = productoService.listarProductos();
