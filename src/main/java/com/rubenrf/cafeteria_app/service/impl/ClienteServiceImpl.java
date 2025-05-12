@@ -48,6 +48,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public void eliminarCliente(Long idCliente) {
+        if (!clienteRepository.existsById(idCliente)) {
+            throw new EntityNotFoundException("Cliente #" + idCliente + " no encontrado.");
+        }
         clienteRepository.deleteById(idCliente);
     }
 

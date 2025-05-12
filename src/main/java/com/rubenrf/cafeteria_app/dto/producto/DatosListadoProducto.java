@@ -13,12 +13,9 @@ public record DatosListadoProducto(Long id, String nombre, Double precio, Catego
     public DatosListadoProducto(Producto producto) {
         this(producto.getId(), producto.getNombre(), producto.getPrecio(), Categoria.valueOf(producto.getCategoria()),
                 producto.getStock(), producto.getDetallesPedidoList().stream().map(detalle -> {
-                    log.info("Estado del pedido: {}", detalle.getPedido().getEstado());
                     if(detalle.getPedido().getEstado().equals(Estado.CANCELADO.toString())){
-                        log.info("Pedido cancelado, no se cuenta");
                         return 0;
                     }
-                    log.info("Pedido no cancelado, se cuenta");
                     return detalle.getCantidad();
                 }).reduce(0, Integer::sum));
     }
