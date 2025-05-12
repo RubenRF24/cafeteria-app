@@ -1,13 +1,18 @@
 package com.rubenrf.cafeteria_app.model;
 
+import java.util.List;
+
 import com.rubenrf.cafeteria_app.dto.producto.DatosActualizarProducto;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,9 +21,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "tbl_producto")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Producto {
 
     @Id
@@ -37,6 +42,9 @@ public class Producto {
 
     @Column(name = "stock")
     private Integer stock;
+
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
+    private List<DetallesPedido> detallesPedidoList;
 
     public void actualizarProducto(DatosActualizarProducto datosActualizarProducto) {
         if (datosActualizarProducto.nombre() != null) {

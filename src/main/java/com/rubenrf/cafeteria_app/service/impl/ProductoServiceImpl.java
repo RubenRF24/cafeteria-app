@@ -1,5 +1,7 @@
 package com.rubenrf.cafeteria_app.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,6 +62,11 @@ public class ProductoServiceImpl implements ProductoService {
         }
         producto.setStock(producto.getStock() - cantidad);
         actualizarProducto(producto);
+    }
+
+    @Override
+    public List<DatosListadoProducto> listarProductos() {
+        return productoRepository.findAll().stream().map(DatosListadoProducto::new).toList();
     }
 
     

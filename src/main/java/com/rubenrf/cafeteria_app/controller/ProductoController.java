@@ -1,6 +1,8 @@
 package com.rubenrf.cafeteria_app.controller;
 
 import java.net.URI;
+import java.util.Comparator;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,11 +22,14 @@ import com.rubenrf.cafeteria_app.dto.producto.DatosActualizarProducto;
 import com.rubenrf.cafeteria_app.dto.producto.DatosCrearProducto;
 import com.rubenrf.cafeteria_app.dto.producto.DatosListadoProducto;
 import com.rubenrf.cafeteria_app.dto.producto.DatosRespuestaProducto;
+import com.rubenrf.cafeteria_app.dto.producto.DatosRespuestasProductosMasVendidos;
 import com.rubenrf.cafeteria_app.model.Categoria;
 import com.rubenrf.cafeteria_app.model.Producto;
 import com.rubenrf.cafeteria_app.service.ProductoService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/productos")
@@ -52,7 +57,7 @@ public class ProductoController {
         Producto producto = productoService.buscarProductoPorId(id);
 
         return ResponseEntity.ok(new DatosRespuestaProducto(producto.getId(), producto.getNombre(),
-                producto.getPrecio(), Categoria.valueOf(producto.getCategoria()), producto.getStock()));
+        producto.getPrecio(), Categoria.valueOf(producto.getCategoria()), producto.getStock()));
     }
 
     @GetMapping
@@ -85,5 +90,16 @@ public class ProductoController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/unidades-vendidas")
+    public ResponseEntity<?> obtenerProductosMasVendidos() {
+
+        List<DatosListadoProducto> productos = productoService.listarProductos();
+
+        List<DatosRespuestasProductosMasVendidos> productosMasVendidos = productos.stream().map(producto -> new DatosRespuestasProductosMasVendidos(producto.id(), producto.nombre(), producto.unidadesVendidas())).sorted(Comparator.comparingInt(DatosRespuestasProductosMasVendidos::unidadesVendidas).reversed()).toList();
+
+        return ResponseEntity.ok(productosMasVendidos);
+    }
+    
 
 }
