@@ -60,4 +60,10 @@ public class ClienteServiceImpl implements ClienteService {
         clienteRepository.deleteById(idCliente);
     }
 
+    @Override
+    @Transactional
+    public void eliminarTodosLosClientes() {
+        clienteRepository.deleteAll();
+    }
+
 }

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Import;
 
 import com.rubenrf.cafeteria_app.dto.cliente.DatosListadoCliente;
 import com.rubenrf.cafeteria_app.dto.producto.DatosListadoProducto;
+import com.rubenrf.cafeteria_app.service.ClienteService;
 import com.rubenrf.cafeteria_app.service.ProductoService;
 
 import io.restassured.RestAssured;
@@ -25,12 +26,16 @@ class CafeteriaAppApplicationTests {
 	@Autowired
 	private ProductoService productoService;
 
+	@Autowired
+	private ClienteService clienteService;
+
 	@BeforeEach
 	void setup() {
 		RestAssured.baseURI = "http://localhost";
 		RestAssured.port = port;
 
 		productoService.eliminarTodosLosProductos();
+		clienteService.eliminarTodosLosClientes();
 	}
 
 	@Test

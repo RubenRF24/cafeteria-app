@@ -19,4 +19,6 @@ public interface ClienteService {
 
     void eliminarCliente(Long idCliente);
 
+    void eliminarTodosLosClientes();
+
 }

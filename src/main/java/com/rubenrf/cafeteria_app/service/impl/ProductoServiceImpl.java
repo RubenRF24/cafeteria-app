@@ -81,6 +81,7 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    @Transactional
     public void eliminarTodosLosProductos() {
         productoRepository.deleteAll();
     }
