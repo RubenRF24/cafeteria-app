@@ -7,7 +7,7 @@ public interface PedidoService {
 
     Pedido crearPedido(Cliente cliente);
 
-    void cancelarPedido(Long idPedido);
+    Pedido cancelarPedido(Long idPedido);
 
     void entregarPedido(Long idPedido);
 

@@ -19,4 +19,6 @@ public interface ProductoService {
 
     Producto buscarProductoPorId(Long id);
 
+    void actualizarStock(Producto producto, int cantidad);
+
 }

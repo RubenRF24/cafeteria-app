@@ -30,10 +30,10 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public void cancelarPedido(Long idPedido) {
+    public Pedido cancelarPedido(Long idPedido) {
         Pedido pedido = buscarPedidoPorId(idPedido);
         pedido.setEstado(Estado.CANCELADO.toString());
-        pedidoRepository.save(pedido);
+        return pedidoRepository.save(pedido);
     }
 
     @Override

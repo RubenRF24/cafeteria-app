@@ -23,6 +23,7 @@ public class DetallesPedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_detallespedido")
     private Long id;
 
     @ManyToOne

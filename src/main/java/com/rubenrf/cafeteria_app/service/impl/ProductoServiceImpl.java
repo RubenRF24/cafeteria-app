@@ -53,4 +53,12 @@ public class ProductoServiceImpl implements ProductoService {
                 .orElseThrow(() -> new EntityNotFoundException("Producto #" + id + " no encontrado."));
     }
 
+    @Override
+    public void actualizarStock(Producto producto, int cantidad) {
+        producto.setStock(producto.getStock() - cantidad);
+        actualizarProducto(producto);
+    }
+
+    
+
 }

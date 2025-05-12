@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -66,6 +67,10 @@ public class PedidoController {
 
         detallesPedidoService.crearDetallesPedido(detallesPedidoList);
 
+        pedidoCreado.getDetallesPedidoList().forEach(detalle -> {
+            productoService.actualizarStock(detalle.getProducto(), detalle.getCantidad());
+        });
+
         URI uri = uriComponentsBuilder.path("/api/pedidos/{id}").buildAndExpand(pedidoCreado.getId()).toUri();
 
         return ResponseEntity.created(uri)
@@ -91,9 +96,30 @@ public class PedidoController {
     @PutMapping("/{id}/cancelar-pedido")
     public ResponseEntity<?> cancelarPedido(@PathVariable Long id) {
 
-        pedidoService.cancelarPedido(id);
+        Pedido pedidoCancelado = pedidoService.cancelarPedido(id);
 
+        pedidoCancelado.getDetallesPedidoList().forEach(detalle -> {
+            productoService.actualizarStock(detalle.getProducto(), detalle.getCantidad() * -1);
+        });
+        
         return ResponseEntity.ok().body("Pedido #" + id + " cancelado.");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> obtenerPedido(@PathVariable Long id) {
+        Pedido pedido = pedidoService.buscarPedidoPorId(id);
+        if (pedido == null) {
+            return ResponseEntity.badRequest().body("Pedido no encontrado");
+        }
+
+        return ResponseEntity.ok(new DatosListadoPedido(pedido.getId(), pedido.getCliente().getNombre(),
+                pedido.getEstado(),
+                pedido.getDetallesPedidoList().stream().map(detalle -> {
+                    return new DatosListadoDetallesPedido(detalle.getProducto().getNombre(),
+                            detalle.getCantidad());
+                }).toList(), pedido.getDetallesPedidoList().stream().map(detalle -> {
+                    return detalle.getProducto().getPrecio() * detalle.getCantidad();
+                }).reduce(0.0, Double::sum)));
     }
 
 }
