@@ -55,6 +55,9 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public void actualizarStock(Producto producto, int cantidad) {
+        if(producto.getStock() < cantidad){
+            throw new IllegalArgumentException("No hay suficiente stock de " + producto.getNombre());
+        }
         producto.setStock(producto.getStock() - cantidad);
         actualizarProducto(producto);
     }
