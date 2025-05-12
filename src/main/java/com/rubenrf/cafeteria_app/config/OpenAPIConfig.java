@@ -15,7 +15,7 @@ public class OpenAPIConfig {
                 return new OpenAPI()
                                 .info(new Info().title("Cafeteria API")
                                                 .description("Este es la API REST para el servicio de Cafeteria")
-                                                .version("v.0.0.1").license(new License().name("Apache 2.0")));
+                                                .version("v.1.0.0").license(new License().name("Apache 2.0")));
         }
 
 }
