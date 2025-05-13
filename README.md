@@ -14,8 +14,8 @@ Esta API permite gestionar productos, clientes y pedidos de una cafetería. Incl
 
 ## Tecnologías Utilizadas
 
-- Java 17
-- Spring Boot 3.x
+- Java 21
+- Spring Boot 3.4.5
 - Spring Data JPA
 - MySQL
 - Maven
